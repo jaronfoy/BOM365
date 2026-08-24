@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>365 Days of the Book of Mormon</title>
+<style>
+:root{--bg:#f7f4ee;--card:#fff;--ink:#2f2924;--muted:#756b63;--accent:#6f4e37;--gold:#b58a4a}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Georgia,serif;min-height:100vh}
+.wrap{max-width:760px;margin:auto;padding:28px 18px 50px}.title{text-align:center;margin-bottom:22px}
+h1{font-size:clamp(28px,6vw,44px);margin:0 0 8px}.subtitle{color:var(--muted);font-family:system-ui,sans-serif}
+.card{background:var(--card);border-radius:22px;padding:22px;box-shadow:0 8px 30px #00000012;margin:16px 0}
+.controls{display:grid;grid-template-columns:1fr 1fr;gap:12px;font-family:system-ui,sans-serif}
+button,input{font:inherit;border:1px solid #ddd1c5;border-radius:12px;padding:12px;background:#fff;color:var(--ink)}
+button{cursor:pointer;background:var(--accent);color:white;border:0;font-weight:700}
+button.secondary{background:#eee7df;color:var(--ink)}
+.label{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);display:block;margin-bottom:6px}
+.wheel{display:flex;align-items:center;justify-content:center;gap:10px;margin:18px 0}
+.wheel button{width:48px;height:48px;border-radius:50%;padding:0;font-size:25px}
+.wheel .num{font-family:system-ui,sans-serif;font-weight:800;font-size:22px;min-width:80px;text-align:center}
+.result{text-align:center;padding:28px 12px}.day{font-family:system-ui,sans-serif;color:var(--gold);font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.ref{font-size:clamp(30px,7vw,52px);margin:12px 0 8px;color:var(--accent)}
+.theme{font-size:22px;line-height:1.4}.month{font-family:system-ui,sans-serif;color:var(--muted);margin-top:12px}
+.nav{display:flex;gap:10px}.nav button{flex:1}
+.note{font-family:system-ui,sans-serif;color:var(--muted);font-size:13px;text-align:center;margin-top:18px}
+@media(max-width:520px){.controls{grid-template-columns:1fr}.ref{font-size:34px}.theme{font-size:19px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="title">
+    <h1>365 Days of the Book of Mormon</h1>
+    <div class="subtitle">A chronological journey through significant teachings of Jesus Christ</div>
+  </div>
+
+  <div class="card">
+    <div class="controls">
+      <div>
+        <span class="label">Choose a date</span>
+        <input id="date" type="date">
+      </div>
+      <div>
+        <span class="label">Jump to day</span>
+        <input id="dayInput" type="number" min="1" max="365" value="1">
+      </div>
+    </div>
+    <div class="wheel">
+      <button class="secondary" id="down">−</button>
+      <div class="num" id="wheelDay">Day 1</div>
+      <button id="up">+</button>
+    </div>
+    <div class="nav">
+      <button class="secondary" id="prev">Previous</button>
+      <button id="today">Today</button>
+      <button class="secondary" id="next">Next</button>
+    </div>
+  </div>
+
+  <div class="card result">
+    <div class="day" id="dayLabel">January 1 · Day 1</div>
+    <div class="ref" id="ref">1 Nephi 1:1</div>
+    <div class="theme" id="theme">Nephi's testimony</div>
+    <div class="month" id="progress">1 of 365</div>
+  </div>
+
+  <div class="note">Use the wheel, date picker, or day number to explore the year.</div>
+</div>
+
+<script>
+const readings = [
+["1 Nephi 1:1","Nephi's testimony"],["1 Nephi 1:5","Lehi prays"],["1 Nephi 1:15","Praise to God"],["1 Nephi 1:20","Tender mercies"],["1 Nephi 2:16","Desire to know"],["1 Nephi 2:20","Obedience and blessings"],["1 Nephi 3:7","I will go and do"],["1 Nephi 4:6","Following the Spirit"],["1 Nephi 5:8","Sariah's testimony"],["1 Nephi 7:12","God can accomplish His work"],["1 Nephi 8:10–11","Tree of life"],["1 Nephi 8:12","Sharing Christ's goodness"],["1 Nephi 8:20","Strait and narrow path"],["1 Nephi 8:24","Holding to the word"],["1 Nephi 8:30","Clinging to the rod"],["1 Nephi 10:17","Desire for revelation"],["1 Nephi 11:8","Seeing through the Spirit"],["1 Nephi 11:17","God's love"],["1 Nephi 11:21","Son of God"],["1 Nephi 11:25","Word of God"],["1 Nephi 11:32","Christ's Crucifixion"],["1 Nephi 11:33","Atonement"],["1 Nephi 12:10","Righteousness through Christ"],["1 Nephi 13:26","Lost truths"],["1 Nephi 13:29","Plain and precious truths"],["1 Nephi 13:37","Building Zion"],["1 Nephi 14:14","Armed with righteousness"],["1 Nephi 15:23–24","Word of God"],["1 Nephi 16:2","Truth can pierce"],["1 Nephi 16:28","Faith and the Liahona"],["1 Nephi 17:3","God nourishes His children"],
+["1 Nephi 17:13","God is our light"],["1 Nephi 17:50","Faith in God's commands"],["1 Nephi 18:3","Prayer and revelation"],["1 Nephi 18:16","Turning to God"],["1 Nephi 19:9","Christ suffers because of love"],["1 Nephi 19:23","Applying scripture"],["1 Nephi 20:10","Refining Israel"],["1 Nephi 21:15–16","God remembers us"],["1 Nephi 22:17","God preserves the righteous"],["1 Nephi 22:20","Prophet like Moses"],["1 Nephi 22:25","Christ gathers His sheep"],["2 Nephi 1:15","Lehi rejoices in Christ"],["2 Nephi 1:20","Obedience"],["2 Nephi 2:6","Redemption through Christ"],["2 Nephi 2:7","Broken heart and contrite spirit"],["2 Nephi 2:11","Opposition"],["2 Nephi 2:16","Agency"],["2 Nephi 2:25","Joy"],["2 Nephi 2:27","Liberty and eternal life"],["2 Nephi 3:12","Restoration"],["2 Nephi 3:15","Joseph Smith"],["2 Nephi 4:15–16","Delight in scripture"],["2 Nephi 4:19","God is our support"],["2 Nephi 4:30–31","Prayer for deliverance"],["2 Nephi 4:33","Encompassed by God's love"],["2 Nephi 4:34","God is our rock"],["2 Nephi 5:27","Happiness"],["2 Nephi 6:12","God remembers His covenant"],
+["2 Nephi 9:6","Resurrection"],["2 Nephi 9:7","Infinite Atonement"],["2 Nephi 9:10","Deliverance from death"],["2 Nephi 9:18","Righteousness through Christ"],["2 Nephi 9:21","Christ suffers for us"],["2 Nephi 9:23","Repentance and baptism"],["2 Nephi 9:28","Learning and wisdom"],["2 Nephi 9:39","Spiritual-mindedness"],["2 Nephi 9:41","The way to God"],["2 Nephi 9:51","Feast upon righteousness"],["2 Nephi 10:23","Reconcile with God"],["2 Nephi 10:25","Cheer up your hearts"],["2 Nephi 11:2","Witnesses of Christ"],["2 Nephi 25:23","Grace and salvation"],["2 Nephi 25:26","We talk of Christ"],["2 Nephi 26:24","Christ works for our good"],["2 Nephi 26:25","Christ invites all"],["2 Nephi 26:33","All are alike unto God"],["2 Nephi 27:23","God's marvelous work"],["2 Nephi 28:7","Eat, drink, and be merry"],["2 Nephi 28:26","False doctrine"],["2 Nephi 28:30","Line upon line"],["2 Nephi 29:10","God speaks to all"],["2 Nephi 30:2","Covenant people"],["2 Nephi 31:4","Christ's baptism"],["2 Nephi 31:7","Christ obeyed the Father"],["2 Nephi 31:10","Follow Christ"],["2 Nephi 31:20","Press forward in Christ"],["2 Nephi 31:21","Doctrine of Christ"],["2 Nephi 32:3","Feast upon Christ's words"],["2 Nephi 32:8","Pray always"],
+["2 Nephi 33:4","Truthfulness of Christ's words"],["2 Nephi 33:10","Believe in Christ"],["2 Nephi 33:15","Nephi's final testimony"],["Jacob 1:7","Labor for Christ"],["Jacob 1:8","Suffer Christ's cross"],["Jacob 2:18","Seek God's kingdom"],["Jacob 2:19","Seek riches for good"],["Jacob 2:21","Created by God"],["Jacob 3:1","Pure in heart"],["Jacob 4:6","Faith and revelation"],["Jacob 4:7","God gives us strength"],["Jacob 4:10","Counsel with God"],["Jacob 4:14","Looking beyond the mark"],["Jacob 5:11","Lord labors for His children"],["Jacob 5:15","Fruit of the vineyard"],["Jacob 5:41","The Lord grieves"],["Jacob 5:47","God's hand stretched out"],["Jacob 5:61","Laborers called"],["Jacob 5:72","Laboring with Christ"],["Jacob 6:5","Cleave unto God"],["Jacob 7:5","Faith in Christ"],["Jacob 7:8","God reveals truth"],["Jacob 7:10","Scriptures testify of Christ"],["Jacob 7:11","Revelation"],["Enos 1:4","Crying unto God"],["Enos 1:5","Forgiveness"],["Enos 1:8","Faith in Christ"],["Enos 1:15","Prayer for enemies"],["Enos 1:27","Hope in Christ"],["Omni 1:26","Come unto Christ"],
+["Mosiah 1:7","Scriptures preserve truth"],["Mosiah 2:17","Service to God"],["Mosiah 2:21","Indebted to God"],["Mosiah 2:22","Obedience and blessings"],["Mosiah 2:41","Blessed and happy"],["Mosiah 3:5","Christ's coming"],["Mosiah 3:7","Christ's suffering"],["Mosiah 3:9","Christ rejected"],["Mosiah 3:11","Christ's Atonement"],["Mosiah 3:13","Christ saves children"],["Mosiah 3:17","Salvation through Christ"],["Mosiah 3:19","Becoming like Christ"],["Mosiah 4:9","Believe in God"],["Mosiah 4:11","Remember God's goodness"],["Mosiah 4:12","Rejoice in God's love"],["Mosiah 4:15","Teach children"],["Mosiah 4:16","Give to the poor"],["Mosiah 4:27","Do things wisely"],["Mosiah 5:2","Mighty change of heart"],["Mosiah 5:5","Covenant with God"],["Mosiah 5:7","Children of Christ"],["Mosiah 5:8","Take Christ's name"],["Mosiah 5:13","Know Christ"],["Mosiah 7:33","Turn to the Lord"],["Mosiah 8:18","Seers"],["Mosiah 12:27","Knowing God's ways"],["Mosiah 13:33","Christ's premortal identity"],["Mosiah 14:5","Christ wounded for us"],["Mosiah 15:9","Christ makes intercession"],["Mosiah 16:8","Death swallowed up"],["Mosiah 17:9","Abinadi's testimony"],
+["Mosiah 18:8","Bear one another's burdens"],["Mosiah 18:9","Witnesses of Christ"],["Mosiah 18:10","Baptismal covenant"],["Mosiah 18:21","Unity"],["Mosiah 18:23","Sabbath"],["Mosiah 24:14","Christ lightens burdens"],["Mosiah 24:15","Submit to God's will"],["Mosiah 27:14","Alma's conversion"],["Mosiah 27:25","Born of God"],["Mosiah 27:28","Alma's joy"],["Mosiah 29:32","Righteous government"],["Alma 1:25","Faithfulness"],["Alma 2:28","God strengthens His people"],["Alma 4:19","Power of the word"],["Alma 5:7","Mighty change"],["Alma 5:14","Born again"],["Alma 5:16","Can you imagine Christ?"],["Alma 5:19","Clean before God"],["Alma 5:26","Spiritual awakening"],["Alma 5:40","Shepherd's voice"],["Alma 5:46","Prayer and humility"],["Alma 5:49","Holy Ghost"],["Alma 5:62","Come unto Christ"],["Alma 7:11","Christ takes our pains"],["Alma 7:12","Christ succors us"],["Alma 7:14","Come unto Christ"],["Alma 7:23","Christlike attributes"],["Alma 8:10","Alma wrestles in prayer"],["Alma 9:27","Christ's coming"],["Alma 11:40","Christ redeems mankind"],
+["Alma 11:42","Resurrection"],["Alma 12:24","Probationary state"],["Alma 12:32","God's plan revealed"],["Alma 13:3","Priesthood"],["Alma 13:28","Humility and prayer"],["Alma 13:29","Rest from the Lord"],["Alma 15:6","Zeezrom's faith"],["Alma 16:16","Word of God"],["Alma 17:2","Scripture study"],["Alma 17:3","Prayer and fasting"],["Alma 17:11","Patience"],["Alma 18:10","Service"],["Alma 18:24","Teaching Christ"],["Alma 18:40","King Lamoni prays"],["Alma 19:6","Light of everlasting life"],["Alma 19:13","Conversion"],["Alma 20:4","Love for others"],["Alma 22:15","Desire for eternal life"],["Alma 22:18","Give away sins"],["Alma 23:7","Conversion"],["Alma 24:15","Burying weapons"],["Alma 24:19","Covenant faithfulness"],["Alma 26:11","Ammon's humility"],["Alma 26:12","I know that I am nothing"],["Alma 26:16","Glory in God"],["Alma 29:9","Joy in bringing souls to Christ"],["Alma 30:44","Evidence of God"],["Alma 31:5","Power of the word"],["Alma 32:21","Faith"],["Alma 32:27","Experiment upon the word"],["Alma 32:28","The word begins to grow"],
+["Alma 32:41","Nourish faith"],["Alma 33:11","Prayer"],["Alma 34:8","Christ's Atonement"],["Alma 34:9","Need for Atonement"],["Alma 34:14","Infinite Atonement"],["Alma 34:15","Mercy satisfies justice"],["Alma 34:31","Repent now"],["Alma 34:32","This life is the time"],["Alma 34:38","Humility"],["Alma 36:3","Trust God"],["Alma 36:5","Alma remembers Christ"],["Alma 36:18","Crying for mercy"],["Alma 36:19","Joy replaces pain"],["Alma 36:20","Joy in Christ"],["Alma 36:24","Labor for souls"],["Alma 37:6","Small and simple things"],["Alma 37:35","Learn wisdom in youth"],["Alma 37:36","Counsel with God"],["Alma 38:9","No other way"],["Alma 39:9","Repentance"],["Alma 40:3","Resurrection"],["Alma 40:11","Spirits after death"],["Alma 40:23","Restoration of the body"],["Alma 41:10","Wickedness never was happiness"],["Alma 41:11","Natural state"],["Alma 42:8","Plan of happiness"],["Alma 42:15","Mercy through Christ"],["Alma 42:27","Come unto God"],["Alma 43:47","God supports the righteous"],["Alma 46:12","Title of Liberty"],["Alma 48:17","Captain Moroni's faith"],
+["Alma 50:23","Prosperity through righteousness"],["Alma 53:20","Stripling warriors"],["Alma 56:47","Mothers' faith"],["Alma 56:48","Young warriors' faith"],["Alma 57:21","Faithfulness"],["Alma 58:10","Prayer"],["Alma 58:11","Comfort and peace"],["Alma 61:9","Pahoran's faith"],["Alma 62:41","Trials change people"],["Alma 63:4","Hagoth"],["Helaman 3:27","Word of God"],["Helaman 3:29","Word leads to salvation"],["Helaman 3:35","Humility and purification"],["Helaman 5:5","Remember Christ"],["Helaman 5:9","Atonement"],["Helaman 5:12","Build upon Christ"],["Helaman 5:23","Prison miracle"],["Helaman 5:30","Still small voice"],["Helaman 5:47","Peace"],["Helaman 5:48","Angels minister"],["Helaman 6:37","Conversion"],["Helaman 7:9","Nephi mourns"],["Helaman 7:16","Repentance"],["Helaman 8:22","Prophets testify of Christ"],["Helaman 10:4","Nephi's faithfulness"],["Helaman 10:5","God's power"],["Helaman 11:7","Nephi prays"],["Helaman 12:1","Human weakness"],["Helaman 12:24","Repentance and mercy"],["Helaman 13:5","Samuel's prophecy"],
+["Helaman 14:2","Christ's birth"],["Helaman 14:8","Faith"],["Helaman 14:12","Christ's name"],["Helaman 14:15","Resurrection"],["Helaman 14:18","Redemption"],["3 Nephi 1:13","Christ is born"],["3 Nephi 1:15","Sign fulfilled"],["3 Nephi 1:19","Darkness becomes light"],["3 Nephi 3:12","Defend faith and family"],["3 Nephi 5:13","Mormon's identity"],["3 Nephi 5:20","Mormon's testimony"],["3 Nephi 9:13","Christ calls us"],["3 Nephi 9:14","Come unto Christ"],["3 Nephi 9:18","Christ is the light"],["3 Nephi 10:4","Christ gathers"],["3 Nephi 10:6","Repentance"],["3 Nephi 11:3","Still small voice"],["3 Nephi 11:7","The Father introduces Christ"],["3 Nephi 11:10","Christ identifies Himself"],["3 Nephi 11:11","Christ's Atonement"],["3 Nephi 11:14","Touch His wounds"],["3 Nephi 11:15","Witness of Christ"],["3 Nephi 11:27","Godhead"],["3 Nephi 11:29","Contention"],["3 Nephi 11:32","Doctrine of Christ"],["3 Nephi 11:39","Foundation"],["3 Nephi 11:40","Build on Christ"],["3 Nephi 12:3","Poor in spirit"],["3 Nephi 12:9","Peacemakers"],["3 Nephi 12:16","Let your light shine"],["3 Nephi 12:48","Be perfect"],
+["3 Nephi 13:21","Treasures"],["3 Nephi 13:33","Seek God's kingdom"],["3 Nephi 14:7","Ask, seek, knock"],["3 Nephi 14:12","Golden Rule"],["3 Nephi 14:24","Build on the rock"],["3 Nephi 15:9","Christ is the law"],["3 Nephi 17:7","Christ heals"],["3 Nephi 17:9","Faith and healing"],["3 Nephi 17:20","Christ's compassion"],["3 Nephi 17:21","Christ blesses children"],["3 Nephi 17:23","Angels minister"],["3 Nephi 18:7","Sacrament"],["3 Nephi 18:15","Watch and pray"],["3 Nephi 18:20","Ask the Father"],["3 Nephi 18:24","Let your light shine"],["3 Nephi 19:9","Desire the Holy Ghost"],["3 Nephi 19:25","Christ's disciples"],["3 Nephi 20:22","Christ's church"],["3 Nephi 20:26","Children of the covenant"],["3 Nephi 21:6","The Book of Mormon as a sign"],["3 Nephi 22:10","God's kindness"],["3 Nephi 23:1","Search Isaiah"],["3 Nephi 24:10","Tithing"],["3 Nephi 25:6","Elijah's promise"],["3 Nephi 26:13","Mormon's abridgment"],["3 Nephi 27:8","Christ's church"],["3 Nephi 27:13","Christ's gospel"],["3 Nephi 27:14","Christ lifted up"],["3 Nephi 27:16","Salvation through Christ"],["3 Nephi 27:27","Become like Christ"],
+["3 Nephi 28:10","Joy in Christ"],["4 Nephi 1:2","Conversion"],["4 Nephi 1:15","No contention"],["4 Nephi 1:16–17","No divisions"],["Mormon 1:15","Mormon sees Christ"],["Mormon 2:19","Mormon's testimony"],["Mormon 5:18","Mormon's sorrow"],["Mormon 7:7","Resurrection"],["Mormon 8:35","Moroni sees our day"],["Mormon 9:6","Come unto Christ"],["Mormon 9:13","Resurrection and redemption"],["Mormon 9:21","Ask in Christ's name"],["Ether 2:12","Promised land"],["Ether 3:6","Brother of Jared's faith"],["Ether 3:9","Faith brings knowledge"],["Ether 3:14","Christ's identity"],["Ether 3:16","Christ is God"],["Ether 12:4","Hope"],["Ether 12:6","Witness after faith"],["Ether 12:27","Weakness becomes strength"],["Ether 12:41","Faith, hope, charity"],["Ether 13:11","New Jerusalem"],["Moroni 2:2","Holy Ghost"],["Moroni 4:3","Sacrament and Christ"],["Moroni 5:2","Remember Christ"],["Moroni 6:4","Taking Christ's name"],["Moroni 7:16","Light of Christ"],["Moroni 7:41","Hope through Christ"],["Moroni 7:45–47","Charity"],["Moroni 10:4–5","Know the truth through the Spirit"],["Moroni 10:32–33","Come unto Christ"]
+];
+
+const dateEl=document.getElementById("date"), dayInput=document.getElementById("dayInput");
+const wheelDay=document.getElementById("wheelDay"), dayLabel=document.getElementById("dayLabel"), ref=document.getElementById("ref"), theme=document.getElementById("theme"), progress=document.getElementById("progress");
+const months=["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+function ordinalDay(d){return Math.floor((Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())-Date.UTC(d.getFullYear(),0,1))/86400000)+1}
+
+// show(n, yearOverride) - yearOverride lets callers render the ordinal day in a specific year.
+// If yearOverride omitted, prefer the year from the date input (if set), otherwise current year.
+function show(n, yearOverride){
+  n=Math.max(1,Math.min(365,Math.floor(n))); 
+  const year = yearOverride ?? (dateEl.value ? new Date(dateEl.value+"T00:00:00").getFullYear() : new Date().getFullYear());
+  const d=new Date(year,0,n-1 + 1); // normalize: new Date(year,0,n) gives Jan + (n) days; using n-1+1 keeps clarity
+  // but simpler: construct by adding (n-1) days to Jan 1
+  const jan1 = new Date(year,0,1);
+  const dayDate = new Date(jan1.getFullYear(), jan1.getMonth(), jan1.getDate() + (n-1));
+  dayInput.value=n; wheelDay.textContent=`Day ${n}`;
+  dayLabel.textContent=`${months[dayDate.getMonth()]} ${dayDate.getDate()} · Day ${n}`;
+  ref.textContent=readings[n-1][0]; theme.textContent=readings[n-1][1]; progress.textContent=`${n} of 365`;
+  dateEl.value=`${year}-${String(dayDate.getMonth()+1).padStart(2,"0")}-${String(dayDate.getDate()).padStart(2,"0")}`;
+}
+
+function fromDate(){
+  const d=new Date(dateEl.value+"T00:00:00"); 
+  if(!isNaN(d)) show(ordinalDay(d), d.getFullYear());
+}
+
+document.getElementById("up").onclick=()=>show(+dayInput.value+1);
+document.getElementById("down").onclick=()=>show(+dayInput.value-1);
+document.getElementById("next").onclick=()=>show(+dayInput.value+1);
+document.getElementById("prev").onclick=()=>show(+dayInput.value-1);
+dayInput.onchange=()=>show(+dayInput.value);
+dateEl.onchange=fromDate;
+document.getElementById("today").onclick=()=>{
+  const now=new Date(); 
+  const start=new Date(now.getFullYear(),0,1); 
+  const n=Math.min(365,Math.max(1,Math.floor((new Date(now.getFullYear(),now.getMonth(),now.getDate())-start)/86400000)+1));
+  show(n, now.getFullYear());
+};
+
+// initialize to current year Day 1
+show(1, new Date().getFullYear());
+</script>
+</body>
+</html>
